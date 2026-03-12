@@ -297,15 +297,15 @@ class NotificationService {
     String? sound,
   }) async {
     late tz.TZDateTime tzTime;
-try {
-  tzTime = tz.TZDateTime.from(scheduledAt, tz.local);
-} catch (e) {
-  await _plugin.show(9997, 'DEBUG tz error', e.toString(),
-    const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
-  return;
-}
+    try {
+      tzTime = tz.TZDateTime.from(scheduledAt, tz.local);
+    } catch (e) {
+      await _plugin.show(9997, 'DEBUG tz error', e.toString(),
+        const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
+      return;
+    }
 
-    AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       channelId,
       channelId,
       importance: channelId == _chPrayerUrgent ? Importance.max : Importance.high,
@@ -323,31 +323,27 @@ try {
 
     final details = NotificationDetails(android: androidDetails);
 
-    if (canExact) {
-      await _plugin.zonedSchedule(
-        id,
-        title,
-        body,
-        tzTime,
-        details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        payload: payload,
-      );
-    } else {
-      // Fallback: inexact — still better than nothing
-      await _plugin.zonedSchedule(
-        id,
-        title,
-        body,
-        tzTime,
-        details,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        payload: payload,
-      );
+    try {
+      if (canExact) {
+        await _plugin.zonedSchedule(
+          id, title, body, tzTime, details,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: payload,
+        );
+      } else {
+        await _plugin.zonedSchedule(
+          id, title, body, tzTime, details,
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: payload,
+        );
+      }
+    } catch (e) {
+      await _plugin.show(9996, 'DEBUG zonedSchedule error', e.toString(),
+        const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
     }
   }
 
