@@ -179,7 +179,11 @@ class NotificationService {
 
   Future<void> scheduleDay(DateTime date) async {
     final times = _prayerService.getTimesForDate(date);
-    if (times == null) return;
+    if (times == null) {
+      await _plugin.show(9998, 'DEBUG', 'times is NULL',
+        const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
+      return;
+    }
 
     final canExact = await canScheduleExactAlarms();
 
