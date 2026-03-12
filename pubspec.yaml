@@ -28,3 +28,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/prayer_times.json
+    - assets/three_beeps.ogg
+    - assets/soft_chime.ogg
+    - assets/double_beep.ogg
