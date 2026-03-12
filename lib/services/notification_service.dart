@@ -253,16 +253,19 @@ class NotificationService {
     if (_isRamadan(date)) {
       await _scheduleFastingNotifications(date, canExact);
     }
-    // 5-min test from scheduleDay
-    final testTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 5));
+    // 2-min test from scheduleDay (same method as prayer notifs)
+    final testDateTime = DateTime.now().add(const Duration(minutes: 2));
+    final testTzTime = tz.TZDateTime.from(testDateTime, tz.local);
     await _plugin.zonedSchedule(
       9993,
-      '⏱ scheduleDay 5min test',
-      'timezone=\${tz.local.name} scheduled=\${testTime}',
-      testTime,
+      '⏱ scheduleDay 2min test',
+      'tz=${tz.local.name} fires=${testTzTime.toString().substring(0, 16)}',
+      testTzTime,
       const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time',
         importance: Importance.high, priority: Priority.high)),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: canExact
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
     final pending = await _plugin.pendingNotificationRequests();
