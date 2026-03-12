@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:flutter_timezone/flutter_timezone.dart';
 import '../models/prayer.dart';
 import '../data/quotes.dart';
 import 'prayer_time_service.dart';
@@ -69,7 +70,8 @@ class NotificationService {
 
   Future<void> init() async {
     tz_data.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Asia/Singapore'));
+    final timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
 
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidInit);
@@ -253,6 +255,18 @@ class NotificationService {
     if (_isRamadan(date)) {
       await _scheduleFastingNotifications(date, canExact);
     }
+    // 5-min test from scheduleDay
+    final testTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 5));
+    await _plugin.zonedSchedule(
+      9993,
+      '⏱ scheduleDay 5min test',
+      'timezone=\${tz.local.name} scheduled=\${testTime}',
+      testTime,
+      const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time',
+        importance: Importance.high, priority: Priority.high)),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+    );
     final pending = await _plugin.pendingNotificationRequests();
     await _plugin.show(9994, 'DEBUG pending', pending.length.toString() + ' scheduled',
       const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
