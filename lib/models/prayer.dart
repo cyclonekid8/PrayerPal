@@ -7,11 +7,11 @@ enum PrayerStatus { pending, prayed, missed, edited }
 extension PrayerNameExt on PrayerName {
   String get displayName {
     switch (this) {
-      case PrayerName.fajr: return 'Subuh';
-      case PrayerName.dhuhr: return 'Zuhur';
-      case PrayerName.asr: return 'Asar';
+      case PrayerName.fajr: return 'Fajr';
+      case PrayerName.dhuhr: return 'Dhuhr';
+      case PrayerName.asr: return 'Asr';
       case PrayerName.maghrib: return 'Maghrib';
-      case PrayerName.isha: return 'Isyak';
+      case PrayerName.isha: return 'Isha';
     }
   }
 
@@ -31,6 +31,7 @@ extension PrayerNameExt on PrayerName {
 class DailyPrayerTimes {
   final DateTime date;
   final DateTime fajr;
+  final DateTime syuruk;
   final DateTime dhuhr;
   final DateTime asr;
   final DateTime maghrib;
@@ -39,6 +40,7 @@ class DailyPrayerTimes {
   const DailyPrayerTimes({
     required this.date,
     required this.fajr,
+    required this.syuruk,
     required this.dhuhr,
     required this.asr,
     required this.maghrib,
@@ -55,10 +57,10 @@ class DailyPrayerTimes {
     }
   }
 
-  /// End of prayer window = start of next prayer (Isha ends at midnight)
+  /// End of prayer window = start of next prayer (fajr ends at syuruk, isha ends at midnight)
   DateTime windowEndFor(PrayerName prayer) {
     switch (prayer) {
-      case PrayerName.fajr: return dhuhr;
+      case PrayerName.fajr: return syuruk;
       case PrayerName.dhuhr: return asr;
       case PrayerName.asr: return maghrib;
       case PrayerName.maghrib: return isha;

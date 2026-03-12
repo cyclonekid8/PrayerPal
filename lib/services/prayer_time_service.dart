@@ -52,11 +52,12 @@ class PrayerTimeService {
   DailyPrayerTimes _parseEntry(DateTime date, Map<String, dynamic> entry) {
     return DailyPrayerTimes(
       date: date,
-      fajr: _parseTime(date, entry['fajr'] as String),
-      dhuhr: _parseTime(date, entry['dhuhr'] as String),
-      asr: _parseTime(date, entry['asr'] as String),
+      fajr:    _parseTime(date, entry['fajr'] as String),
+      syuruk:  _parseTime(date, entry['syuruk'] as String),
+      dhuhr:   _parseTime(date, entry['dhuhr'] as String),
+      asr:     _parseTime(date, entry['asr'] as String),
       maghrib: _parseTime(date, entry['maghrib'] as String),
-      isha: _parseTime(date, entry['isha'] as String),
+      isha:    _parseTime(date, entry['isha'] as String),
     );
   }
 
