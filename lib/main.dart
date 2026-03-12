@@ -63,23 +63,22 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
-    _runPermissionFlow();
-    _scheduleToday();
+    _runPermissionFlowThenSchedule();
     _listenToNotificationEvents();
   }
 
-  Future<void> _runPermissionFlow() async {
-    // Small delay to let UI settle
+  Future<void> _runPermissionFlowThenSchedule() async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (mounted) {
       await PermissionService().requestAllPermissions(context);
     }
+    await _scheduleToday();
   }
 
   Future<void> _scheduleToday() async {
     final today = DateTime.now();
+    await NotificationService().scheduleTestNotification();
     await NotificationService().scheduleDay(today);
-    // Also schedule tomorrow so overnight alarms are ready
     await NotificationService().scheduleDay(today.add(const Duration(days: 1)));
   }
 
