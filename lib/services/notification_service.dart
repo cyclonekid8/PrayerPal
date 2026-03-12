@@ -347,7 +347,8 @@ class NotificationService {
         );
       }
     } catch (e) {
-      await _plugin.show(9996, 'DEBUG zonedSchedule error', e.toString(),
+      final errId = DateTime.now().millisecondsSinceEpoch.remainder(9000);
+      await _plugin.show(errId, 'DEBUG schedule error', e.toString(),
         const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
     }
   }
