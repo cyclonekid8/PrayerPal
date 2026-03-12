@@ -187,9 +187,6 @@ class NotificationService {
 
     final canExact = await canScheduleExactAlarms();
 
-    final pending = await _plugin.pendingNotificationRequests();
-    await _plugin.show(9994, 'DEBUG pending', pending.length.toString() + ' scheduled',
-      const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
     await _plugin.show(9995, 'DEBUG scheduleDay', 'canExact=' + canExact.toString() + ' date=' + date.toString(),
       const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
     for (final prayer in PrayerName.values) {
@@ -256,6 +253,9 @@ class NotificationService {
     if (_isRamadan(date)) {
       await _scheduleFastingNotifications(date, canExact);
     }
+    final pending = await _plugin.pendingNotificationRequests();
+    await _plugin.show(9994, 'DEBUG pending', pending.length.toString() + ' scheduled',
+      const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
   }
 
   Future<void> _scheduleFastingNotifications(DateTime date, bool canExact) async {
