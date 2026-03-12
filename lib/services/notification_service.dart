@@ -296,7 +296,14 @@ class NotificationService {
     required List<int> vibration,
     String? sound,
   }) async {
-    final tzTime = tz.TZDateTime.from(scheduledAt, tz.local);
+    late tz.TZDateTime tzTime;
+try {
+  tzTime = tz.TZDateTime.from(scheduledAt, tz.local);
+} catch (e) {
+  await _plugin.show(9997, 'DEBUG tz error', e.toString(),
+    const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
+  return;
+}
 
     AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       channelId,
