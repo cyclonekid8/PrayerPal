@@ -187,6 +187,8 @@ class NotificationService {
 
     final canExact = await canScheduleExactAlarms();
 
+    await _plugin.show(9995, 'DEBUG scheduleDay', 'canExact=' + canExact.toString() + ' date=' + date.toString(),
+      const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
     for (final prayer in PrayerName.values) {
       final start = times.timeFor(prayer);
       final end   = times.windowEndFor(prayer);
