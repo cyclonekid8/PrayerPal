@@ -148,6 +148,35 @@ class NotificationService {
   }
 
   // ── Schedule all notifications for a day ──────────
+  /// DEBUG ONLY — fires a notification 10 seconds after called
+  Future<void> scheduleTestNotification() async {
+    final scheduledAt = DateTime.now().add(const Duration(seconds: 10));
+    final tzTime = tz.TZDateTime.from(scheduledAt, tz.local);
+    final canExact = await canScheduleExactAlarms();
+    await _plugin.zonedSchedule(
+      9999,
+      '✅ PrayerPal Test',
+      'Notifications are working!',
+      tzTime,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          _chPrayerOpen,
+          'Prayer Time',
+          importance: Importance.high,
+          priority: Priority.high,
+          vibrationPattern: Int64List.fromList(_vibSingle),
+          enableVibration: true,
+        ),
+      ),
+      androidScheduleMode: canExact
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      payload: 'test',
+    );
+  }
+
   Future<void> scheduleDay(DateTime date) async {
     final times = _prayerService.getTimesForDate(date);
     if (times == null) return;
