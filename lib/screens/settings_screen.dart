@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/notification_service.dart';
 import '../services/permission_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,6 +14,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _notifSvc = NotificationService();
   final _permSvc  = PermissionService();
+  final _player   = AudioPlayer();
 
   Map<String, bool> _perms = {};
   String _selectedSound = 'three_beeps';
@@ -122,9 +124,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                   ),
-                  // Play button (visual only — implement with audioplayers package)
                   GestureDetector(
-                    onTap: () => _showPlaySnackbar(s['name']!),
+                    onTap: () async {
+                      await _player.stop();
+                      await _player.play(AssetSource('${s['key']!}.ogg'));
+                    },
                     child: Container(
                       width: 36, height: 36,
                       decoration: BoxDecoration(
@@ -144,15 +148,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showPlaySnackbar(String name) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Playing: $name (add audioplayers package to implement)'),
-        backgroundColor: const Color(0xFF141d2b),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 
   Widget _buildVibrationSection() {
     final patterns = [
