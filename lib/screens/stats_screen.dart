@@ -82,7 +82,7 @@ class _StatsScreenState extends State<StatsScreen> {
                   const SizedBox(height: 18),
                   ...PrayerName.values.map((p) => SizedBox(
                     height: 28,
-                    child: Text(p.displayName.substring(0, p.displayName.length < 4 ? p.displayName.length : 4),
+                    child: Text(p.displayName,
                       style: const TextStyle(fontSize: 9, color: Color(0xFF5a6d88))),
                   )),
                 ],

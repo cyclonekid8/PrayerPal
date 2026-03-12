@@ -7,11 +7,11 @@ enum PrayerStatus { pending, prayed, missed, edited }
 extension PrayerNameExt on PrayerName {
   String get displayName {
     switch (this) {
-      case PrayerName.fajr: return 'Fajr';
-      case PrayerName.dhuhr: return 'Dhuhr';
-      case PrayerName.asr: return 'Asr';
+      case PrayerName.fajr: return 'Subuh';
+      case PrayerName.dhuhr: return 'Zuhur';
+      case PrayerName.asr: return 'Asar';
       case PrayerName.maghrib: return 'Maghrib';
-      case PrayerName.isha: return 'Isha';
+      case PrayerName.isha: return 'Isyak';
     }
   }
 
