@@ -168,14 +168,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         child: Row(
           children: [
-            Text(p['icon']!, style: const TextStyle(fontSize: 18)),
+            Text(p['icon']! as String, style: const TextStyle(fontSize: 18)),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(p['name']!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                  Text(p['desc']!, style: const TextStyle(fontSize: 11, color: Color(0xFF5a6d88))),
+                  Text(p['name']! as String, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                  Text(p['desc']! as String, style: const TextStyle(fontSize: 11, color: Color(0xFF5a6d88))),
                 ],
               ),
             ),
