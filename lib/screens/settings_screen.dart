@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/notification_service.dart';
 import '../services/permission_service.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:vibration/vibration.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -151,10 +152,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildVibrationSection() {
     final patterns = [
-      {'name': 'Prayer Notifications', 'desc': 'Single pulse · [0, 300ms]', 'icon': '🔔'},
-      {'name': '30-min Reminders',     'desc': 'Double pulse · [0, 200, 100, 200ms]', 'icon': '⏰'},
-      {'name': 'Urgent Alarm',         'desc': 'Triple heavy · [0, 300, 100, 300, 100, 300ms]', 'icon': '🚨'},
-      {'name': 'Ramadan Encouragements', 'desc': 'Gentle single', 'icon': '🌙'},
+      {'name': 'Prayer Notifications',   'desc': 'Single pulse · [0, 300ms]',                    'icon': '🔔', 'pattern': [0, 300]},
+      {'name': '30-min Reminders',         'desc': 'Double pulse · [0, 200, 100, 200ms]',           'icon': '⏰', 'pattern': [0, 200, 100, 200]},
+      {'name': 'Urgent Alarm',             'desc': 'Triple heavy · [0, 300, 100, 300, 100, 300ms]', 'icon': '🚨', 'pattern': [0, 300, 100, 300, 100, 300]},
+      {'name': 'Ramadan Encouragements',   'desc': 'Gentle single',                                 'icon': '🌙', 'pattern': [0, 150]},
     ];
     return Column(
       children: patterns.map((p) => Container(
@@ -179,9 +180,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             GestureDetector(
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Vibration test'), duration: Duration(seconds: 1)),
-              ),
+              onTap: () async {
+                await Vibration.vibrate(pattern: List<int>.from(p['pattern']! as List));
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(

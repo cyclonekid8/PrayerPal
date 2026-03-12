@@ -18,6 +18,7 @@ dependencies:
   permission_handler: ^11.3.1
   cupertino_icons: ^1.0.8
   audioplayers: ^6.1.0
+  vibration: ^3.0.2
 
 dev_dependencies:
   flutter_test:
