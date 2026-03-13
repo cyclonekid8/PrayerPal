@@ -79,7 +79,7 @@ class _AppShellState extends State<AppShell> {
     final today = DateTime.now();
     await NotificationService().scheduleTestNotification();
     await NotificationService().scheduleDay(today);
-    await NotificationService().scheduleDay(today.add(const Duration(days: 1)));
+    await NotificationService().scheduleDay(today.add(const Duration(days: 1)), dayOffset: 1);
   }
 
   void _listenToNotificationEvents() {

@@ -177,7 +177,7 @@ class NotificationService {
     );
   }
 
-  Future<void> scheduleDay(DateTime date) async {
+  Future<void> scheduleDay(DateTime date, {int dayOffset = 0}) async {
     final times = _prayerService.getTimesForDate(date);
     if (times == null) {
       await _plugin.show(9998, 'DEBUG', 'times is NULL',
@@ -192,7 +192,7 @@ class NotificationService {
     for (final prayer in PrayerName.values) {
       final start = times.timeFor(prayer);
       final end   = times.windowEndFor(prayer);
-      final base  = _baseFor(prayer);
+      final base  = _baseFor(prayer) + (dayOffset * 50);
       final now   = DateTime.now();
 
       if (end.isBefore(now)) continue; // already passed
@@ -251,7 +251,7 @@ class NotificationService {
 
     // 4. Ramadan fasting notifications (10am, 12pm, 2pm, 4pm, 6pm)
     if (_isRamadan(date)) {
-      await _scheduleFastingNotifications(date, canExact);
+      await _scheduleFastingNotifications(date, canExact, dayOffset: dayOffset);
     }
     // 2-min test from scheduleDay (same method as prayer notifs)
     final testDateTime = DateTime.now().add(const Duration(minutes: 2));
@@ -273,7 +273,7 @@ class NotificationService {
       const NotificationDetails(android: AndroidNotificationDetails('prayer_open', 'Prayer Time')));
   }
 
-  Future<void> _scheduleFastingNotifications(DateTime date, bool canExact) async {
+  Future<void> _scheduleFastingNotifications(DateTime date, bool canExact, {int dayOffset = 0}) async {
     final slots = [10, 12, 14, 16, 18];
     for (int i = 0; i < slots.length; i++) {
       final slotTime = DateTime(date.year, date.month, date.day, slots[i], 0);
@@ -283,7 +283,7 @@ class NotificationService {
             ? '${quote.text}\n— ${quote.attribution}'
             : quote.text;
         await _scheduleNotification(
-          id: _fastingBase + i,
+          id: _fastingBase + i + (dayOffset * 50),
           scheduledAt: slotTime,
           channelId: _chRamadan,
           title: _fastingTitle(slots[i]),
